@@ -1,21 +1,25 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:social_media/screens/sign_up.dart';
+import 'package:social_media/state_management/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
 
+// ignore: must_be_immutable
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  SignInScreen({super.key});
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     // Height and width of the screen
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       backgroundColor: AppColors.grey,
@@ -49,12 +53,20 @@ class SignInScreen extends StatelessWidget {
                     Icons.email,
                     "Email address",
                   ),
-                  customTextField(
-                    height,
-                    width,
-                    passwordController,
-                    Icons.lock,
-                    "Password",
+                  Consumer(
+                    builder: (context, ref, child) => customTextFieldPassword(
+                      height,
+                      width,
+                      passwordController,
+                      Icons.lock,
+                      "Password",
+                      ref.watch(textFieldsObscureSignInProvider),
+                      () {
+                        ref
+                            .read(textFieldsObscureSignInProvider.notifier)
+                            .changeTheValue();
+                      },
+                    ),
                   ),
                   customButton(height, width, "Sign In"),
                   SizedBox(
@@ -92,5 +104,4 @@ class SignInScreen extends StatelessWidget {
       ),
     );
   }
-
 }
