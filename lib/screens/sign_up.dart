@@ -125,6 +125,10 @@ class SignUpScreen extends StatelessWidget {
                           }),
                           customButton(height, width, "Sign Up", () {
                             ref.read(signUpProvider.notifier).signUp();
+                            emailController.clear();
+                            passwordController.clear();
+                            passwordConfirmController.clear();
+                            usernameController.clear();
                           }),
                           SizedBox(
                             height: height * 0.026,
