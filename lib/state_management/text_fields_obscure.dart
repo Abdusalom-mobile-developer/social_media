@@ -3,6 +3,8 @@ import 'package:riverpod/riverpod.dart';
 class TextFieldsObscureSignIn extends StateNotifier<bool> {
   TextFieldsObscureSignIn() : super(true);
 
+  bool get value => state;
+
   void changeTheValue() {
     state = !state;
   }
@@ -10,6 +12,8 @@ class TextFieldsObscureSignIn extends StateNotifier<bool> {
 
 class TextFieldsObscureSignUp extends StateNotifier<bool> {
   TextFieldsObscureSignUp() : super(true);
+  
+  bool get value => state;
 
   void changeTheValue() {
     state = !state;

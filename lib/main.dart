@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:social_media/screens/home.dart';
 import 'package:social_media/screens/sign_in.dart';
@@ -6,7 +7,7 @@ import 'package:social_media/screens/sign_up.dart';
 
 void main() {
   runApp(
-    PopScope(
+    ProviderScope(
       child: MyApp(),
     ),
   );
@@ -35,7 +36,7 @@ final _router = GoRouter(
         return CustomTransitionPage(
           key: state.pageKey,
           transitionDuration: const Duration(milliseconds: 300),
-          child: const SignInScreen(),
+          child: SignInScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: CurveTween(curve: Curves.easeIn).animate(animation),
@@ -51,7 +52,7 @@ final _router = GoRouter(
         return CustomTransitionPage(
           key: state.pageKey,
           transitionDuration: const Duration(milliseconds: 300),
-          child: const SignUpScreen(),
+          child: SignUpScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: CurveTween(curve: Curves.easeIn).animate(animation),

@@ -1,22 +1,26 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_media/state_management/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
 
+// ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  SignUpScreen({super.key});
+
+   TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController passwordConfirmController = TextEditingController();
+    TextEditingController usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     // Height and width of the screen
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController passwordConfirmController = TextEditingController();
-    TextEditingController usernameController = TextEditingController();
-    bool isObscure = true;
+  
     return Scaffold(
       backgroundColor: AppColors.grey,
       body: Padding(
@@ -56,19 +60,33 @@ class SignUpScreen extends StatelessWidget {
                     Icons.email,
                     "Email address",
                   ),
-                  customTextField(
-                    height,
-                    width,
-                    passwordController,
-                    Icons.lock,
-                    "Password",
+                  Consumer(
+                    builder: (context, ref, child) => customTextFieldPassword(
+                      height,
+                      width,
+                      passwordController,
+                      Icons.lock,
+                      "Password",
+                      ref.watch(textFieldsObscureSignUpProvider),
+                      () {
+                        ref
+                            .read(textFieldsObscureSignUpProvider.notifier)
+                            .changeTheValue();
+                      },
+                    ),
                   ),
-                  customTextField(
-                    height,
-                    width,
-                    passwordConfirmController,
-                    Icons.lock,
-                    "Confirm Password",
+                  Consumer(
+                    builder: (context, ref, child) => customTextFieldPassword(
+                        height,
+                        width,
+                        passwordConfirmController,
+                        Icons.lock,
+                        "Confirm Password",
+                        ref.watch(textFieldsObscureSignUpProvider), () {
+                      ref
+                          .read(textFieldsObscureSignUpProvider.notifier)
+                          .changeTheValue();
+                    }),
                   ),
                   customButton(height, width, "Sign Up"),
                   SizedBox(
@@ -237,12 +255,14 @@ Widget customTextField(double height, width, TextEditingController controller,
 }
 
 Widget customTextFieldPassword(
-    double height,
-    width,
-    TextEditingController controller,
-    IconData icon,
-    String text,
-    bool isObscure) {
+  double height,
+  width,
+  TextEditingController controller,
+  IconData icon,
+  String text,
+  bool isObscure,
+  VoidCallback function,
+) {
   return Container(
     alignment: Alignment.center,
     padding: EdgeInsets.only(left: height * 0.01),
@@ -275,18 +295,33 @@ Widget customTextFieldPassword(
               fontSize: height * 0.023,
             ),
             decoration: InputDecoration(
-                suffix:
-                    Icon(isObscure ? Icons.visibility : Icons.visibility_off),
-                hintText: text,
-                hintStyle: TextStyle(
-                  color: AppColors.black,
-                  fontSize: height * 0.023,
-                ),
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide.none,
-                )),
+              hintText: text,
+              hintStyle: TextStyle(
+                color: AppColors.black,
+                fontSize: height * 0.023,
+              ),
+              border: const UnderlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
-        )
+        ),
+        SizedBox(
+          width: width * 0.019,
+        ),
+        Consumer(
+          builder: (context, ref, child) => GestureDetector(
+            onTap: function,
+            child: Icon(
+              size: height * 0.033,
+              isObscure ? Icons.visibility : Icons.visibility_off,
+              color: AppColors.black,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: width * 0.029,
+        ),
       ],
     ),
   );
