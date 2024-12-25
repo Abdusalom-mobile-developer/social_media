@@ -1,0 +1,96 @@
+// ignore_for_file: unused_local_variable
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
+import 'package:social_media/screens/sign_up.dart';
+import 'package:social_media/utils/colors.dart';
+
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Height and width of the screen
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
+    return Scaffold(
+      backgroundColor: AppColors.grey,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Transform.translate(
+                    offset: Offset(
+                      0,
+                      height * 0.039,
+                    ),
+                    child: Lottie.asset(
+                      "assets/animations/waving.json",
+                      height: height * 0.3,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  customTextField(
+                    height,
+                    width,
+                    emailController,
+                    Icons.email,
+                    "Email address",
+                  ),
+                  customTextField(
+                    height,
+                    width,
+                    passwordController,
+                    Icons.lock,
+                    "Password",
+                  ),
+                  customButton(height, width, "Sign In"),
+                  SizedBox(
+                    height: height * 0.026,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      customText(
+                        "Don't have an account? ",
+                        AppColors.black,
+                        height * 0.023,
+                        FontWeight.w400,
+                        '',
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.go('/sign_up');
+                        },
+                        child: customText(
+                          "Sign up",
+                          AppColors.black,
+                          height * 0.023,
+                          FontWeight.w600,
+                          '',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+}
