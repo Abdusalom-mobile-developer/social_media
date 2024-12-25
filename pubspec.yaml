@@ -24,6 +24,7 @@ dependencies:
   go_router: ^14.6.2
   riverpod: ^2.6.1
   flutter_riverpod: ^2.6.1
+  flutter_spinkit: ^5.2.1
 
 
 
