@@ -51,9 +51,9 @@ class SignInScreen extends StatelessWidget {
                               height * 0.039,
                             ),
                             child: Lottie.asset(
-                              "assets/animations/waving.json",
+                              "assets/animations/world.json",
                               height: height * 0.3,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
                           customTextField(
@@ -82,6 +82,8 @@ class SignInScreen extends StatelessWidget {
                           ),
                           customButton(height, width, "Sign In", () {
                             ref.read(signInProvider.notifier).signIn();
+                            emailController.clear();
+                            passwordController.clear();
                           }),
                           SizedBox(
                             height: height * 0.026,
