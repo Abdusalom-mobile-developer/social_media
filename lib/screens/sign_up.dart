@@ -1,9 +1,12 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_media/state_management/image_picker.dart';
 import 'package:social_media/state_management/sign_up.dart';
 import 'package:social_media/state_management/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
@@ -52,9 +55,12 @@ class SignUpScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image:
-                                    NetworkImage("https://i.pravatar.cc/300"),
-                                fit: BoxFit.contain,
+                                image: ref.watch(imageProvider) == null
+                                    ? NetworkImage("https://i.pravatar.cc/300")
+                                    : FileImage(
+                                        File(ref.watch(imageProvider)!),
+                                      ),
+                                fit: BoxFit.cover,
                               ),
                             ),
                             child: Stack(
@@ -68,11 +74,11 @@ class SignUpScreen extends StatelessWidget {
                                       color: AppColors.black,
                                     ),
                                     child: IconButton(
-                                      onPressed: () {},
-                                      // style: ButtonStyle(
-                                      //   minimumSize: WidgetStatePropertyAll(
-                                      //       Size(double.infinity, double.infinity)),
-                                      // ),
+                                      onPressed: () {
+                                        ref
+                                            .read(imageProvider.notifier)
+                                            .getImage();
+                                      },
                                       icon: Icon(
                                         Icons.add_rounded,
                                         color: AppColors.grey,
@@ -113,16 +119,19 @@ class SignUpScreen extends StatelessWidget {
                             },
                           ),
                           customTextFieldPassword(
-                              height,
-                              width,
-                              passwordConfirmController,
-                              Icons.lock,
-                              "Confirm Password",
-                              ref.watch(textFieldsObscureSignUpProvider), () {
-                            ref
-                                .read(textFieldsObscureSignUpProvider.notifier)
-                                .changeTheValue();
-                          }),
+                            height,
+                            width,
+                            passwordConfirmController,
+                            Icons.lock,
+                            "Confirm Password",
+                            ref.watch(textFieldsObscureSignUp2Provider),
+                            () {
+                              ref
+                                  .read(
+                                      textFieldsObscureSignUp2Provider.notifier)
+                                  .changeTheValue();
+                            },
+                          ),
                           customButton(height, width, "Sign Up", () {
                             ref.read(signUpProvider.notifier).signUp();
                             emailController.clear();
