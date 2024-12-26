@@ -6,7 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:social_media/screens/sign_up.dart';
-import 'package:social_media/state_management/sign_in.dart';
+import 'package:social_media/state_management/auth.dart';
 import 'package:social_media/state_management/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
 
@@ -22,11 +22,11 @@ class SignInScreen extends StatelessWidget {
     // Height and width of the screen
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
+    
     return Consumer(
       builder: (context, ref, child) => Scaffold(
         backgroundColor: AppColors.grey,
-        body: ref.watch(signInProvider)
+        body: ref.watch(signInProvider).isWorking
             ? Center(
                 child: SpinKitChasingDots(
                   color: AppColors.black,
@@ -80,8 +80,15 @@ class SignInScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          customButton(height, width, "Sign In", () {
-                            ref.read(signInProvider.notifier).signIn();
+                          customButton(height, width, "Sign In", () async{
+                            await ref.read(signInProvider.notifier).signIn(
+                                  emailController.text.trim(),
+                                  passwordController.text.trim(),
+                                );
+                            if (ref.watch(signInProvider).isSignedIn) {
+                              // ignore: use_build_context_synchronously
+                              context.go('/home_screen');
+                            }
                             emailController.clear();
                             passwordController.clear();
                           }),

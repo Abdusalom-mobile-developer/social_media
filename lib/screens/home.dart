@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:social_media/utils/colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -8,8 +10,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(),
+      backgroundColor: AppColors.grey,
+      body: Center(
+        child: Lottie.asset(
+          "assets/animations/world.json",
+          height: 300,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 }
