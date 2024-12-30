@@ -48,6 +48,7 @@ class SignInProvider extends StateNotifier<SignInState> {
   }
 }
 
+
 final signInProvider =
     StateNotifierProvider<SignInProvider, SignInState>((ref) {
   return SignInProvider();

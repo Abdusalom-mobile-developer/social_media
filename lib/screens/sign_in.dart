@@ -1,13 +1,12 @@
 // ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:social_media/screens/sign_up.dart';
-import 'package:social_media/state_management/auth.dart';
-import 'package:social_media/state_management/text_fields_obscure.dart';
+import 'package:social_media/services/auth/auth_sign_in.dart';
+import 'package:social_media/services/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
 
 // ignore: must_be_immutable

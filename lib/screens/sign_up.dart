@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
-import 'package:social_media/state_management/image_picker.dart';
-import 'package:social_media/state_management/sign_up.dart';
-import 'package:social_media/state_management/text_fields_obscure.dart';
+import 'package:social_media/services/auth/auth_sign_up.dart';
+import 'package:social_media/services/image_picker.dart';
+import 'package:social_media/services/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
 
 // ignore: must_be_immutable
@@ -29,7 +29,7 @@ class SignUpScreen extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) => Scaffold(
         backgroundColor: AppColors.grey,
-        body: ref.watch(signUpProvider)
+        body: ref.watch(signUpProvider).isWorking
             ? Center(
                 child: SpinKitChasingDots(
                   color: AppColors.black,
@@ -132,8 +132,17 @@ class SignUpScreen extends StatelessWidget {
                                   .changeTheValue();
                             },
                           ),
-                          customButton(height, width, "Sign Up", () {
-                            ref.read(signUpProvider.notifier).signUp();
+                          customButton(height, width, "Sign Up", () async{
+                            await ref.read(signUpProvider.notifier).signUp(
+                                  usernameController.text.trim(),
+                                  emailController.text.trim(),
+                                  passwordController.text.trim(),
+                                  passwordConfirmController.text.trim(),
+                                );
+                            if (ref.watch(signUpProvider).isSignedUp) {
+                              // ignore: use_build_context_synchronously
+                              context.go('/home_screen');
+                            }
                             emailController.clear();
                             passwordController.clear();
                             passwordConfirmController.clear();
