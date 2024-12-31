@@ -3,9 +3,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social_media/services/auth/auth_sign_up.dart';
 import 'package:social_media/services/image_picker.dart';
 import 'package:social_media/services/text_fields_obscure.dart';
@@ -19,6 +21,7 @@ class SignUpScreen extends StatelessWidget {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
+  XFile? file;
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +77,8 @@ class SignUpScreen extends StatelessWidget {
                                       color: AppColors.black,
                                     ),
                                     child: IconButton(
-                                      onPressed: () {
-                                        ref
+                                      onPressed: () async{
+                                         file = await ref
                                             .read(imageProvider.notifier)
                                             .getImage();
                                       },
@@ -132,12 +135,13 @@ class SignUpScreen extends StatelessWidget {
                                   .changeTheValue();
                             },
                           ),
-                          customButton(height, width, "Sign Up", () async{
+                          customButton(height, width, "Sign Up", () async {
                             await ref.read(signUpProvider.notifier).signUp(
                                   usernameController.text.trim(),
                                   emailController.text.trim(),
                                   passwordController.text.trim(),
                                   passwordConfirmController.text.trim(),
+                                 file == null ? await getDefaultImageFile() : File(file!.path),
                                 );
                             if (ref.watch(signUpProvider).isSignedUp) {
                               // ignore: use_build_context_synchronously
@@ -392,4 +396,16 @@ Widget customTextFieldPassword(
       ],
     ),
   );
+}
+
+Future<File> getDefaultImageFile() async {
+  // Load asset as byte data
+  final byteData = await rootBundle.load('assets/images/eminem.jpg');
+
+  // Write to a temporary file
+  final tempDir = Directory.systemTemp;
+  final tempFile = File('${tempDir.path}/eminem.jpg');
+  await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+
+  return tempFile;
 }
