@@ -1,17 +1,20 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:social_media/services/auth/auth_sign_up.dart';
-import 'package:social_media/services/image_picker.dart';
-import 'package:social_media/services/text_fields_obscure.dart';
+import 'package:social_media/providers/auth/auth_sign_up.dart';
+import 'package:social_media/providers/image_picker.dart';
+import 'package:social_media/providers/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
+import 'package:social_media/presentation/auth/widgets/custom_button.dart';
+import 'package:social_media/presentation/auth/widgets/custom_text.dart';
+import 'package:social_media/presentation/auth/widgets/custom_text_field.dart';
+import 'package:social_media/presentation/auth/widgets/custom_text_field_password.dart';
 
 // ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
@@ -77,8 +80,8 @@ class SignUpScreen extends StatelessWidget {
                                       color: AppColors.black,
                                     ),
                                     child: IconButton(
-                                      onPressed: () async{
-                                         file = await ref
+                                      onPressed: () async {
+                                        file = await ref
                                             .read(imageProvider.notifier)
                                             .getImage();
                                       },
@@ -141,7 +144,9 @@ class SignUpScreen extends StatelessWidget {
                                   emailController.text.trim(),
                                   passwordController.text.trim(),
                                   passwordConfirmController.text.trim(),
-                                 file == null ? await getDefaultImageFile() : File(file!.path),
+                                  file == null
+                                      ? await getDefaultImageFile()
+                                      : File(file!.path),
                                 );
                             if (ref.watch(signUpProvider).isSignedUp) {
                               // ignore: use_build_context_synchronously
@@ -188,215 +193,9 @@ class SignUpScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget customTextField(double height, width, TextEditingController controller,
-      IconData icon, String text) {
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.only(left: height * 0.01),
-      margin: EdgeInsets.only(top: height * 0.026),
-      height: height * 0.071,
-      width: double.infinity,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(height * 0.01),
-          border: Border.all(color: AppColors.black, width: height * 0.002)),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: height * 0.033,
-            color: AppColors.black,
-          ),
-          SizedBox(
-            width: width * 0.019,
-          ),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              cursorColor: AppColors.black,
-              style: TextStyle(
-                decoration: TextDecoration.none,
-                decorationColor: Colors.transparent,
-                decorationThickness: 0,
-                color: AppColors.black,
-                fontSize: height * 0.023,
-              ),
-              decoration: InputDecoration(
-                  hintText: text,
-                  hintStyle: TextStyle(
-                    color: AppColors.black,
-                    fontSize: height * 0.023,
-                  ),
-                  border: const UnderlineInputBorder(
-                    borderSide: BorderSide.none,
-                  )),
-            ),
-          )
-        ],
-      ),
-    );
-  }
 }
 
-Widget customText(String content, Color color, double fontSize,
-    FontWeight fontWeight, String fontFamily) {
-  return Text(
-    content,
-    style: TextStyle(
-      color: color,
-      fontSize: fontSize,
-      fontFamily: fontFamily,
-      fontWeight: fontWeight,
-    ),
-  );
-}
 
-Widget customButton(double height, width, String text, VoidCallback function) {
-  return Container(
-    alignment: Alignment.center,
-    padding: EdgeInsets.only(left: height * 0.01),
-    margin: EdgeInsets.only(top: height * 0.026),
-    height: height * 0.071,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: AppColors.black,
-      borderRadius: BorderRadius.circular(height * 0.01),
-      border: Border.all(color: AppColors.black, width: height * 0.002),
-    ),
-    child: TextButton(
-      style: ButtonStyle(
-        minimumSize:
-            WidgetStatePropertyAll(Size(double.infinity, double.infinity)),
-      ),
-      onPressed: function,
-      child: Text(
-        text,
-        style: TextStyle(color: AppColors.grey, fontSize: height * 0.023),
-      ),
-    ),
-  );
-}
-
-Widget customTextField(double height, width, TextEditingController controller,
-    IconData icon, String text) {
-  return Container(
-    alignment: Alignment.center,
-    padding: EdgeInsets.only(left: height * 0.01),
-    margin: EdgeInsets.only(top: height * 0.026),
-    height: height * 0.071,
-    width: double.infinity,
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(height * 0.01),
-        border: Border.all(color: AppColors.black, width: height * 0.002)),
-    child: Row(
-      children: [
-        Icon(
-          icon,
-          size: height * 0.033,
-          color: AppColors.black,
-        ),
-        SizedBox(
-          width: width * 0.019,
-        ),
-        Expanded(
-          child: TextField(
-            controller: controller,
-            cursorColor: AppColors.black,
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              decorationColor: Colors.transparent,
-              decorationThickness: 0,
-              color: AppColors.black,
-              fontSize: height * 0.023,
-            ),
-            decoration: InputDecoration(
-                hintText: text,
-                hintStyle: TextStyle(
-                  color: AppColors.black,
-                  fontSize: height * 0.023,
-                ),
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide.none,
-                )),
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-Widget customTextFieldPassword(
-  double height,
-  width,
-  TextEditingController controller,
-  IconData icon,
-  String text,
-  bool isObscure,
-  VoidCallback function,
-) {
-  return Container(
-    alignment: Alignment.center,
-    padding: EdgeInsets.only(left: height * 0.01),
-    margin: EdgeInsets.only(top: height * 0.026),
-    height: height * 0.071,
-    width: double.infinity,
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(height * 0.01),
-        border: Border.all(color: AppColors.black, width: height * 0.002)),
-    child: Row(
-      children: [
-        Icon(
-          icon,
-          size: height * 0.033,
-          color: AppColors.black,
-        ),
-        SizedBox(
-          width: width * 0.019,
-        ),
-        Expanded(
-          child: TextField(
-            obscureText: isObscure,
-            controller: controller,
-            cursorColor: AppColors.black,
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              decorationColor: Colors.transparent,
-              decorationThickness: 0,
-              color: AppColors.black,
-              fontSize: height * 0.023,
-            ),
-            decoration: InputDecoration(
-              hintText: text,
-              hintStyle: TextStyle(
-                color: AppColors.black,
-                fontSize: height * 0.023,
-              ),
-              border: const UnderlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: width * 0.019,
-        ),
-        Consumer(
-          builder: (context, ref, child) => GestureDetector(
-            onTap: function,
-            child: Icon(
-              size: height * 0.033,
-              isObscure ? Icons.visibility : Icons.visibility_off,
-              color: AppColors.black,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: width * 0.029,
-        ),
-      ],
-    ),
-  );
-}
 
 Future<File> getDefaultImageFile() async {
   // Load asset as byte data

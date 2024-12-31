@@ -4,9 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:social_media/screens/sign_up.dart';
-import 'package:social_media/services/auth/auth_sign_in.dart';
-import 'package:social_media/services/text_fields_obscure.dart';
+import 'package:social_media/presentation/auth/widgets/custom_button.dart';
+import 'package:social_media/presentation/auth/widgets/custom_text.dart';
+import 'package:social_media/presentation/auth/widgets/custom_text_field.dart';
+import 'package:social_media/presentation/auth/widgets/custom_text_field_password.dart';
+import 'package:social_media/providers/auth/auth_sign_in.dart';
+import 'package:social_media/providers/text_fields_obscure.dart';
 import 'package:social_media/utils/colors.dart';
 
 // ignore: must_be_immutable
@@ -14,6 +17,7 @@ class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -21,7 +25,7 @@ class SignInScreen extends StatelessWidget {
     // Height and width of the screen
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    
+
     return Consumer(
       builder: (context, ref, child) => Scaffold(
         backgroundColor: AppColors.grey,
@@ -79,7 +83,7 @@ class SignInScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          customButton(height, width, "Sign In", () async{
+                          customButton(height, width, "Sign In", () async {
                             await ref.read(signInProvider.notifier).signIn(
                                   emailController.text.trim(),
                                   passwordController.text.trim(),
