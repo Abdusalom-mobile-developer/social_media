@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media/services/logger.dart';
 
@@ -22,14 +25,18 @@ class SignUpProvider extends StateNotifier<SignUpState> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance.ref();
 
   String? get user => _auth.currentUser?.uid;
 
-  Future<void> signUp(String username, String email, String password,
-      String confirmPassword) async {
+  Future<void> signUp(
+    String username,
+    String email,
+    String password,
+    String confirmPassword,
+    File file,
+  ) async {
     state = state.copyWith(isWorking: true);
-
-    await Future.delayed(const Duration(seconds: 2));
 
     if (email.isEmpty ||
         password.isEmpty ||
@@ -46,17 +53,41 @@ class SignUpProvider extends StateNotifier<SignUpState> {
     }
 
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       if (userCredential.user != null) {
+        Reference reference = _storage
+            .child("images/${DateTime.now().microsecondsSinceEpoch}.jpg");
+
+        await reference.putFile(file);
+
+        final downloadIUrl = await reference.getDownloadURL();
+
         await _firestore.collection("users").doc(userCredential.user!.uid).set(
           {
             "username": username,
             "email": email,
             "password": password,
+            "profile_image": downloadIUrl
           },
         );
+
+        final snapshot = await _firestore
+            .collection("users")
+            .doc(userCredential.user!.uid)
+            .get();
+
+
+        if (snapshot.exists) {
+          LoggerService.d(snapshot.data()!["profile_image"]);
+        } else {
+          LoggerService.d("Document does not exist.");
+        }
+        
         state = state.copyWith(isSignedUp: true);
       }
     } catch (e) {

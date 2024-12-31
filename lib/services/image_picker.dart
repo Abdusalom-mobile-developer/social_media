@@ -4,13 +4,15 @@ import 'package:image_picker/image_picker.dart';
 class ImageProvider extends StateNotifier<String?>{
   ImageProvider() : super(null);
 
-  Future<void> getImage() async {
+  Future<XFile?> getImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       state = image.path;
     }
+
+    return image;
   }
 }
 
