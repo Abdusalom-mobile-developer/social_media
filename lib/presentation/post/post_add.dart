@@ -72,7 +72,7 @@ class PostAddScreen extends StatelessWidget {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: AppResponsive.width(0.1),
+                    horizontal: AppResponsive.width(0.07),
                     vertical: AppResponsive.height(0.027),
                   ),
                   decoration: BoxDecoration(
@@ -92,14 +92,6 @@ class PostAddScreen extends StatelessWidget {
                         Icons.upload_rounded,
                         size: AppResponsive.height(0.05),
                         color: AppColors.black,
-                      ),
-                      Text(
-                        "Upload",
-                        style: TextStyle(
-                          color: AppColors.black,
-                          fontSize: AppResponsive.width(0.045),
-                          fontWeight: FontWeight.w500,
-                        ),
                       ),
                     ],
                   ),
