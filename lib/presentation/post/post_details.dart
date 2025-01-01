@@ -14,6 +14,7 @@ class PostDetails extends StatefulWidget {
 
 class _PostDetailsState extends State<PostDetails> {
   bool isPosting = false;
+  TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class _PostDetailsState extends State<PostDetails> {
         backgroundColor: AppColors.grey,
         appBar: AppBar(
           backgroundColor: AppColors.grey,
+          // AppBar Back Button
           leading: IconButton(
             onPressed: () {
               context.go('/post_add');
@@ -31,6 +33,7 @@ class _PostDetailsState extends State<PostDetails> {
             ),
           ),
           actions: [
+            // AppBar Post Text Part
             TextButton(
               onPressed: () {
                 setState(() {
@@ -39,6 +42,7 @@ class _PostDetailsState extends State<PostDetails> {
                 Timer(Duration(seconds: 5), () {
                   setState(() {
                     isPosting = !isPosting;
+                    _descriptionController.clear();
                   });
                 });
               },
@@ -60,6 +64,7 @@ class _PostDetailsState extends State<PostDetails> {
             width: double.infinity,
             child: Column(
               children: [
+                // Body Liner Progress Indicator
                 isPosting
                     ? LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(
@@ -73,6 +78,7 @@ class _PostDetailsState extends State<PostDetails> {
                     : SizedBox(
                         height: AppResponsive.height(0.0041),
                       ),
+                // Body Post Image Part
                 Container(
                   width: double.infinity,
                   height: AppResponsive.height(0.3),
@@ -91,6 +97,7 @@ class _PostDetailsState extends State<PostDetails> {
                     ),
                   ),
                 ),
+                // Body Description Part
                 Container(
                   height: AppResponsive.height(0.059),
                   margin: EdgeInsets.symmetric(
@@ -106,6 +113,7 @@ class _PostDetailsState extends State<PostDetails> {
                     ),
                   ),
                   child: TextField(
+                    controller: _descriptionController,
                     cursorColor: AppColors.black,
                     style: TextStyle(
                       decoration: TextDecoration.none,
