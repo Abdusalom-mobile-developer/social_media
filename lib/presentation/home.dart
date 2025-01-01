@@ -20,13 +20,13 @@ class HomeScreen extends StatelessWidget {
         showUnselectedLabels: false,
         currentIndex: 0,
         onTap: (value) {
-         if (value == 1) {
+          if (value == 1) {
             context.go('/search_screen');
           } else if (value == 2) {
             context.go('/post_add');
-          }else if (value == 3) {
+          } else if (value == 3) {
             context.go('/favorite_screen');
-          }else if (value == 4) {
+          } else if (value == 4) {
             context.go('/profile_screen');
           }
         },
@@ -54,13 +54,20 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Text("Home"),
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: AppColors.black, width: 1.5),
+          ),
+        ),
+        child: Center(
+          child: Text("Home"),
+        ),
       ),
     );
-
   }
 }
+
 BottomNavigationBarItem bottomNavigationBarItem(double width, IconData? icon,
     [IoniconsData? icon2]) {
   return BottomNavigationBarItem(

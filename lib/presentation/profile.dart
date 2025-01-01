@@ -55,8 +55,15 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Text("Profile"),
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: AppColors.black, width: 1.5),
+          ),
+        ),
+        child: Center(
+          child: Text("Profile"),
+        ),
       ),
     );
   }

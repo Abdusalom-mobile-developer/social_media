@@ -55,8 +55,15 @@ class FavoriteScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Text("Favorite"),
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: AppColors.black, width: 1.5),
+          ),
+        ),
+        child: Center(
+          child: Text("Favorite"),
+        ),
       ),
     );
   }
