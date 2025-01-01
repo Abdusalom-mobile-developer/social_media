@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:social_media/presentation/home.dart';
 import 'package:social_media/utils/colors.dart';
 import 'package:social_media/utils/responsive.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,10 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        currentIndex: 0,
+        currentIndex: 1,
         onTap: (value) {
-         if (value == 1) {
-            context.go('/search_screen');
+          if (value == 0) {
+            context.go('/home_screen');
           } else if (value == 2) {
             context.go('/post_add');
           }else if (value == 3) {
@@ -55,25 +56,8 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text("Home"),
+        child: Text("Search"),
       ),
     );
-
   }
-}
-BottomNavigationBarItem bottomNavigationBarItem(double width, IconData? icon,
-    [IoniconsData? icon2]) {
-  return BottomNavigationBarItem(
-    icon: Icon(
-      icon ?? icon2,
-      color: AppColors.black,
-      size: width * 0.073,
-    ),
-    activeIcon: Icon(
-      icon ?? icon2,
-      color: AppColors.brown,
-      size: width * 0.073,
-    ),
-    label: "",
-  );
 }
