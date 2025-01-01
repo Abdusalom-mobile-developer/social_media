@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:social_media/presentation/home.dart';
 import 'package:social_media/services/shared_preferences.dart';
 import 'package:social_media/utils/colors.dart';
 
@@ -57,11 +57,7 @@ class SplashScreen extends StatelessWidget {
 void checkSignIn(BuildContext context) async {
   bool isSignedIn = await SharedPreferencesService.checkSignIn();
   if (isSignedIn) {
-    Navigator.push(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ));
+   // ignore: use_build_context_synchronously
+   context.go('/home_screen');
   }
 }
