@@ -55,8 +55,15 @@ class SearchScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Text("Search"),
+      body: Container(
+        decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: AppColors.black, width: 1.5),
+            ),
+          ),
+        child: Center(
+          child: Text("Search"),
+        ),
       ),
     );
   }
