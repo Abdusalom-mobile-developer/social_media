@@ -20,10 +20,6 @@ void main() async {
   await Firebase.initializeApp();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.immersiveSticky,
-    overlays: [
-      SystemUiOverlay.top,
-      SystemUiOverlay.bottom,
-    ],
   );
   runApp(
     ProviderScope(
