@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_media/presentation/post/post_description_text_field.dart';
 import 'package:social_media/presentation/post/widgets/progress_indicator.dart';
 import 'package:social_media/providers/upload_post.dart';
 import 'package:social_media/utils/colors.dart';
@@ -40,16 +38,37 @@ class _PostDetailsState extends State<PostDetails> {
             actions: [
               // AppBar Post Text Part
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
                     isPosting = !isPosting;
                   });
-                  Timer(Duration(seconds: 5), () {
-                    setState(() {
-                      isPosting = !isPosting;
-                      _descriptionController.clear();
-                    });
-                  });
+                  bool result =
+                      await ref.read(uploadPostProvider.notifier).uploadPost(
+                            ref.watch(uploadPostProvider)["imageURL"],
+                            _descriptionController.text.trim(),
+                          );
+                  if (result) {
+                    // ignore: use_build_context_synchronously
+                    context.go('/home_screen');
+                  } else {
+                    setState(
+                      () {
+                        isPosting = !isPosting;
+                      },
+                    );
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppColors.black,
+                        content: Text(
+                          "Failed to post",
+                          style: TextStyle(
+                            color: AppColors.grey,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 },
                 child: Text(
                   "Post",
@@ -106,41 +125,7 @@ class _PostDetailsState extends State<PostDetails> {
                           ),
                         ),
                         // Body Description Part
-                        Container(
-                          height: AppResponsive.height(0.059),
-                          margin: EdgeInsets.symmetric(
-                            horizontal: AppResponsive.width(0.05),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppResponsive.width(0.019),
-                          ),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: AppColors.black, width: 1.5),
-                            ),
-                          ),
-                          child: TextField(
-                            controller: _descriptionController,
-                            cursorColor: AppColors.black,
-                            style: TextStyle(
-                              decoration: TextDecoration.none,
-                              decorationThickness: 0,
-                              color: AppColors.black,
-                              fontSize: AppResponsive.width(0.043),
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "Description",
-                              hintStyle: TextStyle(
-                                color: AppColors.black,
-                                fontSize: AppResponsive.width(0.043),
-                              ),
-                              border: UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
-                            ),
-                          ),
-                        ),
+                        postDescription(_descriptionController),
                       ],
                     ),
                   ),
