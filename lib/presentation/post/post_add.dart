@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:social_media/presentation/home.dart';
+import 'package:social_media/presentation/post/widgets/show_dialog.dart';
 import 'package:social_media/utils/colors.dart';
 import 'package:social_media/utils/responsive.dart';
 
@@ -68,7 +69,8 @@ class PostAddScreen extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  context.go('/post_details');
+                  // To show Dialog Where Users can choose from gallery or take a photo
+                  myDialog(context);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -102,3 +104,7 @@ class PostAddScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
