@@ -77,6 +77,14 @@ class SignUpProvider extends StateNotifier<SignUpState> {
           },
         );
 
+       await SharedPreferencesService.storeUserInfo(
+          userCredential.user!.uid,
+          username,
+          email,
+          password,
+          downloadIUrl,
+        );
+
         state = state.copyWith(isSignedUp: true);
         await SharedPreferencesService.setSignIn();
       }
