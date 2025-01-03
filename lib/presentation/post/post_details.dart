@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:social_media/presentation/post/post_description_text_field.dart';
+import 'package:social_media/presentation/post/widgets/post_description_text_field.dart';
 import 'package:social_media/presentation/post/widgets/progress_indicator.dart';
 import 'package:social_media/providers/upload_post.dart';
 import 'package:social_media/utils/colors.dart';
@@ -39,6 +39,7 @@ class _PostDetailsState extends State<PostDetails> {
               // AppBar Post Text Part
               TextButton(
                 onPressed: () async {
+                  FocusScope.of(context).unfocus();
                   setState(() {
                     isPosting = !isPosting;
                   });

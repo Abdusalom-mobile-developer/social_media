@@ -7,11 +7,11 @@ class SharedPreferencesService {
     final SharedPreferences ref = await SharedPreferences.getInstance();
 
     UserFullInfo user = UserFullInfo(
-      uid: "123",
-      username: "JohnDoe",
-      email: "john@example.com",
-      password: "securePassword",
-      profilePic: "profilePicUrl",
+      uid: uid,
+      username: username,
+      email: email,
+      password: password,
+      profilePic: profilePic,
     );
 
     ref.setString("userInfo", user.toJson());
