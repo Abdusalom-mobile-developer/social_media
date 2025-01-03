@@ -59,5 +59,8 @@ void checkSignIn(BuildContext context) async {
   if (isSignedIn) {
    // ignore: use_build_context_synchronously
    context.go('/home_screen');
+  }else{
+    // ignore: use_build_context_synchronously
+    context.go('/sign_in');
   }
 }

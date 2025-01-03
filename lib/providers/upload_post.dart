@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_media/services/logger.dart';
+import 'package:social_media/services/shared_preferences.dart';
 
 class UploadPost extends StateNotifier<Map<String, dynamic>> {
   UploadPost() : super({});
@@ -30,31 +31,30 @@ class UploadPost extends StateNotifier<Map<String, dynamic>> {
   }
 
   Future<bool> uploadPost(String image, String description) async {
-  try {
-    final firestore = FirebaseFirestore.instance;
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    await firestore
-        .collection("posts")
-        .doc(uid)
-        .collection("all_posts")
-        .doc("${DateTime.now().microsecondsSinceEpoch}")
-        .set({
-      "uid": uid,
-      "image": image,
-      "description": description,
-      "likes": 0,
-      "timestamp": DateTime.now(),
-    });
-  } catch (e) {
-    LoggerService.e(e.toString());
-    return false;
+    try {
+      final firestore = FirebaseFirestore.instance;
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      final user = await SharedPreferencesService.getUserInfo();
+
+      await firestore
+          .collection("posts")
+          .doc(uid).set({
+        "uid": uid,
+        "image": image,
+        "description": description,
+        "likes": 0,
+        "timestamp": DateTime.now(),
+        "profilePic": user.profilePic,
+        "postID": "${DateTime.now().microsecondsSinceEpoch}",
+      });
+    } catch (e) {
+      LoggerService.e(e.toString());
+      return false;
+    }
+
+    return true;
   }
-
-  return true;
 }
-}
-
-
 
 final uploadPostProvider =
     StateNotifierProvider<UploadPost, Map<String, dynamic>>(
