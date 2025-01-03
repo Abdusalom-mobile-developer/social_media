@@ -38,12 +38,14 @@ class UploadPost extends StateNotifier<Map<String, dynamic>> {
 
       await firestore
           .collection("posts")
-          .doc(uid).set({
+          .doc(DateTime.now().microsecondsSinceEpoch.toString())
+          .set({
         "uid": uid,
+        "username": user.username,
         "image": image,
         "description": description,
         "likes": 0,
-        "timestamp": DateTime.now(),
+        "timestamp": Timestamp.now(),
         "profilePic": user.profilePic,
         "postID": "${DateTime.now().microsecondsSinceEpoch}",
       });
