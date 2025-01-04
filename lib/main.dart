@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:social_media/presentation/favorite.dart';
-import 'package:social_media/presentation/home.dart';
+import 'package:social_media/presentation/home/home.dart';
 import 'package:social_media/presentation/auth/sign_in.dart';
 import 'package:social_media/presentation/auth/sign_up.dart';
 import 'package:social_media/presentation/post/post_add.dart';

@@ -1,120 +1,51 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:social_media/services/logger.dart';
 import 'package:social_media/utils/colors.dart';
 import 'package:social_media/utils/responsive.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+// ignore: must_be_immutable
+class PostCard extends StatefulWidget {
+  Map<String, dynamic> data;
+  PostCard({required this.data, super.key});
+
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 450),
+    );
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void onDabbleTap() {
+    LoggerService.d("Method is working.");
+    _controller.forward().then(
+          (value) => _controller.reverse(),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.grey,
-      appBar: AppBar(
-        toolbarHeight: AppResponsive.height(0.083),
-        backgroundColor: AppColors.grey,
-        title: Text(
-          "Dream on",
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: AppResponsive.widthM * 0.07,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.message_rounded,
-              color: AppColors.black,
-              size: AppResponsive.width(0.07),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.logout,
-              color: AppColors.black,
-              size: AppResponsive.width(0.07),
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.grey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: 0,
-        onTap: (value) {
-          if (value == 1) {
-            context.go('/search_screen');
-          } else if (value == 2) {
-            context.go('/post_add');
-          } else if (value == 3) {
-            context.go('/favorite_screen');
-          } else if (value == 4) {
-            context.go('/profile_screen');
-          }
-        },
-        items: [
-          bottomNavigationBarItem(AppResponsive.widthM, Icons.home),
-          bottomNavigationBarItem(
-              AppResponsive.widthM, null, Ionicons.search_sharp),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle_rounded,
-              color: AppColors.black,
-              size: AppResponsive.widthM * 0.11,
-            ),
-            activeIcon: Icon(
-              Icons.add_circle_rounded,
-              color: AppColors.brown,
-              size: AppResponsive.widthM * 0.11,
-            ),
-            label: "",
-          ),
-          bottomNavigationBarItem(AppResponsive.widthM, Icons.favorite_rounded),
-          bottomNavigationBarItem(
-            AppResponsive.widthM,
-            Icons.person_rounded,
-          ),
-        ],
-      ),
-      body: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: AppColors.black, width: 1.5),
-              top: BorderSide(color: AppColors.black, width: 1.5),
-            ),
-          ),
-          child: StreamBuilder(
-            stream: FirebaseFirestore.instance.collection("posts").snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                    child: CircularProgressIndicator(
-                  color: AppColors.black,
-                ));
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    return postCardMaker(snapshot.data!.docs[index].data());
-                  },
-                );
-              }
-            },
-          )),
-    );
-  }
-
-  Padding postCardMaker(Map<String, dynamic> data) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: AppResponsive.width(0.039),
@@ -138,14 +69,14 @@ class HomeScreen extends StatelessWidget {
                         color: AppColors.brown,
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(data["profilePic"]),
+                          image: NetworkImage(widget.data["profilePic"]),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                     SizedBox(width: AppResponsive.width(0.03)),
                     Text(
-                      data["username"],
+                      widget.data["username"],
                       style: TextStyle(
                         fontSize: AppResponsive.width(0.041),
                         fontWeight: FontWeight.w500,
@@ -168,20 +99,40 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: AppResponsive.height(0.017),
             ),
-            SizedBox(
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  AppResponsive.width(0.03),
-                ),
-                child: Image(
-                  image: NetworkImage(
-                    data["image"],
+            Stack(
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onDoubleTap: () => onDabbleTap(),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: AppResponsive.height(0.3),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        AppResponsive.width(0.03),
+                      ),
+                      child: Image(
+                        image: NetworkImage(
+                          widget.data["image"],
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  height: AppResponsive.height(0.3),
-                  fit: BoxFit.cover,
                 ),
-              ),
+                Container(
+                  alignment: Alignment.center,
+                  height: AppResponsive.height(0.3),
+                  child: ScaleTransition(
+                    scale: _animation,
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.red[900],
+                      size: AppResponsive.width(0.35),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -233,7 +184,7 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${data["likes"]} likes",
+                    "${widget.data["likes"]} likes",
                     style: TextStyle(
                       fontSize: AppResponsive.width(0.041),
                       fontWeight: FontWeight.w500,
@@ -246,7 +197,7 @@ class HomeScreen extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: data["username"],
+                          text: widget.data["username"],
                           style: TextStyle(
                             fontSize: AppResponsive.width(0.041),
                             fontWeight: FontWeight.w500,
@@ -254,7 +205,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: " ${data["description"]}",
+                          text: " ${widget.data["description"]}",
                           style: TextStyle(
                             fontSize: AppResponsive.width(0.041),
                             fontWeight: FontWeight.w400,
@@ -279,7 +230,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    data["timestamp"].toString(),
+                    widget.data["timestamp"].toString(),
                     style: TextStyle(
                       fontSize: AppResponsive.width(0.041),
                       fontWeight: FontWeight.w500,
@@ -294,21 +245,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-BottomNavigationBarItem bottomNavigationBarItem(double width, IconData? icon,
-    [IoniconsData? icon2]) {
-  return BottomNavigationBarItem(
-    icon: Icon(
-      icon ?? icon2,
-      color: AppColors.black,
-      size: width * 0.073,
-    ),
-    activeIcon: Icon(
-      icon ?? icon2,
-      color: AppColors.brown,
-      size: width * 0.073,
-    ),
-    label: "",
-  );
 }
