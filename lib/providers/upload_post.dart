@@ -36,18 +36,17 @@ class UploadPost extends StateNotifier<Map<String, dynamic>> {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       final user = await SharedPreferencesService.getUserInfo();
 
-      await firestore
-          .collection("posts")
-          .doc(DateTime.now().microsecondsSinceEpoch.toString())
-          .set({
+      final String postId = DateTime.now().microsecondsSinceEpoch.toString();
+
+      await firestore.collection("posts").doc(postId).set({
         "uid": uid,
         "username": user.username,
         "image": image,
         "description": description,
-        "likes": 0,
+        "likes": [],
         "timestamp": Timestamp.now(),
         "profilePic": user.profilePic,
-        "postID": "${DateTime.now().microsecondsSinceEpoch}",
+        "postID": postId,
       });
     } catch (e) {
       LoggerService.e(e.toString());
