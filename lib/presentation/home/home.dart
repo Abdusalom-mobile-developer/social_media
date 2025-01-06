@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:social_media/models/user_info.dart';
 import 'package:social_media/presentation/home/widgets/post_card.dart';
 import 'package:social_media/services/shared_preferences.dart';
 import 'package:social_media/utils/colors.dart';
@@ -16,6 +17,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late UserFullInfo user;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  Future<void> getCurrentUser() async {
+    user = await SharedPreferencesService.getUserInfo();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     return PostCard(
                       data: snapshot.data!.docs[index].data(),
+                      userUID: user.uid,
                     );
                   },
                 );

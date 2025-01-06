@@ -73,7 +73,8 @@ class SignUpProvider extends StateNotifier<SignUpState> {
             "username": username,
             "email": email,
             "password": password,
-            "profile_image": downloadIUrl
+            "profile_image": downloadIUrl,
+            "liked_posts": []
           },
         );
 
