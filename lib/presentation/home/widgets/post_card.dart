@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/presentation/home/methods/like_logic.dart';
 import 'package:social_media/services/logger.dart';
+import 'package:social_media/services/shared_preferences.dart';
 import 'package:social_media/utils/colors.dart';
 import 'package:social_media/utils/responsive.dart';
 
@@ -103,7 +105,14 @@ class _PostCardState extends State<PostCard>
               children: [
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onDoubleTap: () => onDabbleTap(),
+                  onDoubleTap: () async {
+                    onDabbleTap();
+                    final user = await SharedPreferencesService.getUserInfo();
+                    await LikeLogic.likeLogic(
+                      widget.data["postID"],
+                      user.uid,
+                    );
+                  },
                   child: SizedBox(
                     width: double.infinity,
                     height: AppResponsive.height(0.3),
@@ -140,11 +149,18 @@ class _PostCardState extends State<PostCard>
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final user =
+                            await SharedPreferencesService.getUserInfo();
+                        await LikeLogic.likeAndDislikeLogic(
+                          widget.data["postID"],
+                          user.uid,
+                        );
+                      },
                       icon: Icon(
-                        Icons.favorite_rounded,
-                        color: Colors.red[900],
-                        size: AppResponsive.width(0.09),
+                        Icons.favorite_outline_rounded,
+                        color: AppColors.black,
+                        size: AppResponsive.width(0.083),
                       ),
                     ),
                     IconButton(
@@ -184,7 +200,7 @@ class _PostCardState extends State<PostCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.data["likes"]} likes",
+                    "${widget.data["likes"].length} likes",
                     style: TextStyle(
                       fontSize: AppResponsive.width(0.041),
                       fontWeight: FontWeight.w500,

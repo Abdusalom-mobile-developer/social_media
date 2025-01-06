@@ -65,6 +65,7 @@ class _PostDetailsState extends State<PostDetails> {
                           "Failed to post",
                           style: TextStyle(
                             color: AppColors.grey,
+                            fontSize: AppResponsive.width(0.05),
                           ),
                         ),
                       ),
