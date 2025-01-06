@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:social_media/models/user_info.dart';
 import 'package:social_media/presentation/home/methods/like_logic.dart';
 import 'package:social_media/services/logger.dart';
@@ -11,7 +13,7 @@ import 'package:social_media/utils/responsive.dart';
 class PostCard extends StatefulWidget {
   Map<String, dynamic> data;
   String userUID;
-  PostCard({required this.data, required this.userUID,  super.key});
+  PostCard({required this.data, required this.userUID, super.key});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -255,7 +257,7 @@ class _PostCardState extends State<PostCard>
                     ),
                   ),
                   Text(
-                    widget.data["timestamp"].toString(),
+                    formatTimestamp(widget.data["timestamp"]),
                     style: TextStyle(
                       fontSize: AppResponsive.width(0.041),
                       fontWeight: FontWeight.w500,
@@ -270,4 +272,12 @@ class _PostCardState extends State<PostCard>
       ),
     );
   }
+}
+
+String formatTimestamp(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
+
+  String formattedDate = DateFormat('d MMM/yyyy/hh:mm a').format(dateTime);
+
+  return formattedDate;
 }

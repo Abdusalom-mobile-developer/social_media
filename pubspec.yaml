@@ -29,6 +29,7 @@ dependencies:
   iconsax_plus: ^1.0.0
   iconsax: ^0.0.8
   ionicons: ^0.2.2
+  intl: ^0.20.1
 
 
 
