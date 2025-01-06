@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/models/user_info.dart';
 import 'package:social_media/presentation/home/methods/like_logic.dart';
 import 'package:social_media/services/logger.dart';
 import 'package:social_media/services/shared_preferences.dart';
@@ -9,7 +10,8 @@ import 'package:social_media/utils/responsive.dart';
 // ignore: must_be_immutable
 class PostCard extends StatefulWidget {
   Map<String, dynamic> data;
-  PostCard({required this.data, super.key});
+  String userUID;
+  PostCard({required this.data, required this.userUID,  super.key});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -19,6 +21,7 @@ class _PostCardState extends State<PostCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late UserFullInfo user;
 
   @override
   void initState() {
@@ -158,8 +161,14 @@ class _PostCardState extends State<PostCard>
                         );
                       },
                       icon: Icon(
-                        Icons.favorite_outline_rounded,
-                        color: AppColors.black,
+                        List<String>.from(widget.data["likes"])
+                                .contains(widget.userUID)
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_outline_rounded,
+                        color: List<String>.from(widget.data["likes"])
+                                .contains(widget.userUID)
+                            ? Colors.red[900]
+                            : AppColors.black,
                         size: AppResponsive.width(0.083),
                       ),
                     ),
