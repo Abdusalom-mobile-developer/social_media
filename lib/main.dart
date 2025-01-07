@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_media/presentation/comments/comments.dart';
 import 'package:social_media/presentation/favorite/favorite.dart';
 import 'package:social_media/presentation/home/home.dart';
 import 'package:social_media/presentation/auth/sign_in.dart';
@@ -186,6 +187,22 @@ final _router = GoRouter(
           key: state.pageKey,
           transitionDuration: const Duration(milliseconds: 300),
           child: PostDetails(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: CurveTween(curve: Curves.easeIn).animate(animation),
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: "/comments_screen",
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(milliseconds: 300),
+          child: CommentsScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: CurveTween(curve: Curves.easeIn).animate(animation),

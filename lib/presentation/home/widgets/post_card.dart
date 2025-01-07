@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:social_media/models/user_info.dart';
 import 'package:social_media/presentation/home/methods/format_timestamp.dart';
 import 'package:social_media/presentation/home/methods/like_logic.dart';
@@ -174,7 +175,10 @@ class _PostCardState extends State<PostCard>
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigating to the Comments Screen.
+                        context.go("/comments_screen");
+                      },
                       icon: Icon(
                         Icons.message_rounded,
                         color: AppColors.black,
@@ -272,4 +276,3 @@ class _PostCardState extends State<PostCard>
     );
   }
 }
-
