@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:social_media/presentation/home/home.dart';
+import 'package:social_media/presentation/home/widgets/bottom_nav_bar.dart';
 import 'package:social_media/utils/colors.dart';
 import 'package:social_media/utils/responsive.dart';
 
