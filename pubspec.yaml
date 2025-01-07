@@ -30,6 +30,7 @@ dependencies:
   iconsax: ^0.0.8
   ionicons: ^0.2.2
   intl: ^0.20.1
+  keyboard_avoider: ^0.2.0
 
 
 
