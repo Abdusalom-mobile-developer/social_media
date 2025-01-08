@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:social_media/models/user_info.dart';
 import 'package:social_media/presentation/home/methods/format_timestamp.dart';
 import 'package:social_media/presentation/home/methods/like_logic.dart';
 import 'package:social_media/providers/current_post_id.dart';
