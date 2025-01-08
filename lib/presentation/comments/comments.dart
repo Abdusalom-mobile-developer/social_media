@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:social_media/presentation/comments/widgets/comment_typer_part.dart';
+import 'package:social_media/presentation/home/methods/format_timestamp.dart';
+import 'package:social_media/providers/current_post_id.dart';
 import 'package:social_media/utils/colors.dart';
 import 'package:social_media/utils/responsive.dart';
 
@@ -9,110 +15,128 @@ class CommentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.grey,
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
+    return Consumer(
+      builder: (context, ref, child) => Scaffold(
         backgroundColor: AppColors.grey,
-        toolbarHeight: AppResponsive.height(0.1),
-        leading: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: AppColors.black,
-          size: AppResponsive.width(0.075),
-        ),
-        title: Text(
-          "Comments",
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: AppResponsive.width(0.061),
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: AppColors.grey,
+          toolbarHeight: AppResponsive.height(0.1),
+          leading: GestureDetector(
+            onTap: () {
+              context.go("/home_screen");
+            },
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.black,
+              size: AppResponsive.width(0.075),
+            ),
           ),
-        ),
-        centerTitle: true,
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppResponsive.width(0.037),
+          title: Text(
+            "Comments",
+            style: TextStyle(
+              color: AppColors.black,
+              fontSize: AppResponsive.width(0.061),
+            ),
           ),
-          width: double.infinity,
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    height: AppResponsive.height(0.13),
-                    width: double.infinity,
-                    margin:
-                        EdgeInsets.only(bottom: AppResponsive.height(0.025)),
-                    child: Row(
-                      spacing: AppResponsive.width(0.029),
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                left: AppResponsive.width(0.021)),
-                            height: AppResponsive.height(0.063),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.black,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                    AppResponsive.width(0.03))),
-                            child: TextField(
-                              controller: controller,
-                              cursorColor: AppColors.black,
-                              style: TextStyle(
-                                color: AppColors.black,
-                                fontSize: AppResponsive.width(0.039),
-                                fontWeight: FontWeight.w400,
-                                decoration: TextDecoration.none,
-                                decorationThickness: 0,
-                              ),
-                              decoration: InputDecoration(
-                                border: UnderlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintText: "Type comment...",
-                                hintStyle: TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: AppResponsive.width(0.039),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
+          centerTitle: true,
+        ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppResponsive.width(0.037),
+            ),
+            width: double.infinity,
+            child: Stack(
+              children: [
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("posts")
+                      .doc(ref.watch(currentPostId))
+                      .collection("comments")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) => commentMaker(
+                          snapshot.data!.docs[index].data(),
                         ),
-                        Container(
-                            height: AppResponsive.height(0.067),
-                            width: AppResponsive.width(0.139),
-                            decoration: BoxDecoration(
-                              color: AppColors.black,
-                              shape: BoxShape.circle,
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                controller.clear();
-                                FocusScope.of(context).unfocus();
-                              },
-                              child: Icon(
-                                Icons.arrow_upward_rounded,
-                                color: AppColors.grey,
-                                size: AppResponsive.width(0.07),
-                              ),
-                            ))
-                      ],
+                      );
+                    }
+                  },
+                ),
+                commentTyperPart(context, controller),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container commentMaker(Map<String, dynamic> data) {
+    return Container(
+      margin: EdgeInsets.only(bottom: AppResponsive.height(0.023)),
+      padding: EdgeInsets.symmetric(vertical: AppResponsive.height(0.01)),
+      width: double.infinity,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: AppResponsive.height(0.055),
+            width: AppResponsive.width(0.13),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(data["userProfilePic"]),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: AppResponsive.width(0.039),
+          ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: data["username"] + " ",
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: AppResponsive.width(0.047),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "${data["commentText"]}\n",
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: AppResponsive.width(0.043),
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1.19,
+                    ),
+                  ),
+                  TextSpan(
+                    text: formatTimestamp(data["dateCommented"]),
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: AppResponsive.width(0.045),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

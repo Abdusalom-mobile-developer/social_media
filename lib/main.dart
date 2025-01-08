@@ -16,6 +16,7 @@ import 'package:social_media/presentation/splash/splash.dart';
 import 'package:social_media/utils/responsive.dart';
 import 'package:social_media/utils/colors.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
