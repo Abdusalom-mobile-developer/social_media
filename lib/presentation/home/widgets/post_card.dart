@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +27,6 @@ class _PostCardState extends State<PostCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  late UserFullInfo user;
 
   @override
   void initState() {
@@ -282,4 +283,13 @@ class _PostCardState extends State<PostCard>
       ),
     );
   }
+}
+
+Future<int> numberOfCommentsFinder(WidgetRef ref) async {
+  final data = await FirebaseFirestore.instance
+      .collection("posts")
+      .doc()
+      .collection("comments")
+      .get();
+  return data.size;
 }

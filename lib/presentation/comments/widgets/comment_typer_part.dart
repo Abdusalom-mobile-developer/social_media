@@ -16,7 +16,10 @@ Widget commentTyperPart(
           alignment: Alignment.bottomCenter,
           height: AppResponsive.height(0.13),
           width: double.infinity,
-          margin: EdgeInsets.only(bottom: AppResponsive.height(0.025)),
+          padding: EdgeInsets.only(bottom: AppResponsive.height(0.025)),
+          decoration: BoxDecoration(
+            color: AppColors.grey,
+          ),
           child: Row(
             spacing: AppResponsive.width(0.029),
             children: [
@@ -45,7 +48,7 @@ Widget commentTyperPart(
                       border: UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                      hintText: "Type comment...",
+                      hintText: "Write a comment...",
                       hintStyle: TextStyle(
                         color: AppColors.black,
                         fontSize: AppResponsive.width(0.039),
@@ -68,8 +71,8 @@ Widget commentTyperPart(
                       String text = controller.text.trim();
                       controller.clear();
                       final user = await SharedPreferencesService.getUserInfo();
-                      await uploadComment(ref.watch(currentPostId), user.uid,
-                          text, user.profilePic);
+                      await uploadComment(ref.watch(currentPostId),
+                          user.username, user.uid, text, user.profilePic);
                     },
                     child: Icon(
                       Icons.arrow_upward_rounded,
