@@ -46,7 +46,6 @@ class _PostCardState extends State<PostCard>
   }
 
   void onDabbleTap() {
-    LoggerService.d("Method is working.");
     _controller.forward().then(
           (value) => _controller.reverse(),
         );
