@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:social_media/presentation/home/widgets/bottom_nav_bar.dart';
@@ -161,17 +162,34 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 !isSearching
                     ? Expanded(
-                        child: Center(
-                          child: Text(
-                            "Nothing found",
-                            style: TextStyle(
-                              color: AppColors.black,
-                              fontSize: AppResponsive.width(0.045),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      )
+                        child: FutureBuilder(
+                        future: FirebaseFirestore.instance
+                            .collection("posts")
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.black,
+                              ),
+                            );
+                          }
+                          if (snapshot.hasData) {
+                            return ListView(
+                              children: [
+                                StaggeredGrid.count(
+                                  crossAxisCount: 4,
+                                  mainAxisSpacing: AppResponsive.height(0.013),
+                                  crossAxisSpacing: AppResponsive.width(0.025),
+                                  children: makePosts(snapshot.data!.docs),
+                                ),
+                              ],
+                            );
+                          }
+                          return Text("Nothing found.");
+                        },
+                      ))
                     : Expanded(
                         child: FutureBuilder(
                             future: FirebaseFirestore.instance
@@ -223,5 +241,34 @@ class _SearchScreenState extends State<SearchScreen> {
             )),
       ),
     );
+  }
+
+  List<Widget> makePosts(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> dataList) {
+    List<Widget> list = [];
+    int count = 0;
+    for (var data in dataList) {
+      list.add(
+        StaggeredGridTile.count(
+          crossAxisCellCount: 2,
+          mainAxisCellCount: count % 7 == 0 ? 3 : 2,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppResponsive.width(0.03)),
+            child: Image(
+              image: NetworkImage(data.data()["image"]),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      );
+      count++;
+    }
+
+    list.add(
+      SizedBox(
+        height: AppResponsive.height(0.015),
+      ),
+    );
+    return list;
   }
 }
